@@ -248,6 +248,32 @@ The added search parameter will be automatically removed by the plugin when
 the splash screen is initialized after the page reload, so you don't need to
 remove it manually yourself.
 
+## 🧪 Testing
+
+The plugin includes comprehensive E2E tests using Playwright to ensure reliability:
+
+```bash
+# Run tests
+pnpm run test
+
+# Run tests with UI mode for debugging
+pnpm run test:ui
+
+# Build plugin and example before testing
+pnpm run test:build
+```
+
+The test suite validates:
+- Splash screen display on initial load
+- Logo and loader elements presence
+- Hide functionality and timing
+- CSS variables and styling
+- Global API (`window.__RPSS__`) availability
+- Animation and z-index behavior
+- `minDurationMs` option enforcement
+
+See [`tests/README.md`](./tests/README.md) for more details.
+
 ---
 
 ## 🙏 Attribution

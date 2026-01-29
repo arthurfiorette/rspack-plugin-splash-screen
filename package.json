@@ -29,7 +29,9 @@
     "src"
   ],
   "scripts": {
-    "test": "echo \"No tests\" && exit 0",
+    "test": "playwright test",
+    "test:build": "pnpm run build && cd example && pnpm run build",
+    "test:ui": "playwright test --ui",
     "build": "rslib build",
     "watch": "rslib build --watch",
     "example:link": "yalc publish --push && cd example && yalc add rspack-plugin-splash-screen && pnpm i",
@@ -40,6 +42,7 @@
     "@rslib/core": "catalog:",
     "@types/node": "catalog:",
     "typescript": "catalog:",
-    "@rspack/core": "catalog:"
+    "@rspack/core": "catalog:",
+    "@playwright/test": "catalog:"
   }
 }

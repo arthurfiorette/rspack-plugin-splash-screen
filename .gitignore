@@ -5,3 +5,7 @@ node_modules
 dist
 .yalc
 yalc.lock
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
