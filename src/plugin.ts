@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { PluginOption, ResolvedConfig } from "vite";
+import type { Compiler } from "@rspack/core";
 
 type LoaderType = "line" | "dots" | "none";
 
@@ -12,64 +12,153 @@ type PluginOptions = {
   minDurationMs?: number;
 };
 
-export function splashScreen(options: PluginOptions) {
-  if (!options.logoSrc) {
-    throw new Error(
-      "The `logoSrc` option is required for vite-plugin-splash-screen!"
-    );
+export class RspackSplashScreenPlugin {
+  private options: Required<PluginOptions>;
+  private publicDir: string;
+
+  constructor(options: PluginOptions) {
+    if (!options.logoSrc) {
+      throw new Error(
+        "The `logoSrc` option is required for rspack-plugin-splash-screen!"
+      );
+    }
+
+    this.options = {
+      logoSrc: options.logoSrc,
+      minDurationMs: options.minDurationMs ?? 0,
+      loaderType: options.loaderType ?? "line",
+      loaderBg: options.loaderBg ?? "#0072f5",
+      splashBg: options.splashBg ?? "#ffffff",
+    };
+
+    this.publicDir = "public"; // Default public directory
   }
 
-  const {
-    logoSrc,
-    minDurationMs,
-    loaderType = "line",
-    loaderBg = "#0072f5",
-    splashBg = "#ffffff",
-  } = options;
+  apply(compiler: Compiler) {
+    const pluginName = "RspackSplashScreenPlugin";
 
-  let config: ResolvedConfig;
-
-  return {
-    name: "vite-plugin-splash-screen",
-    configResolved(resolvedConfig: any) {
-      config = resolvedConfig;
-    },
-    transformIndexHtml(html: string) {
-      const baseStyles = readPluginFile("styles.css");
-
-      let loaderStyles = "";
-
-      if (loaderType === "line") {
-        loaderStyles = readPluginFile("loaders/line.css");
-      } else if (loaderType === "dots") {
-        loaderStyles = readPluginFile("loaders/dots.css");
+    // Hook into the compilation process to modify HTML
+    compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
+      // Use the HtmlRspackPlugin hooks if available
+      const hooks = (compilation.hooks as any).htmlRspackPluginAlterAssetTags;
+      
+      if (hooks) {
+        hooks.tap(pluginName, (data: any) => {
+          // Get the HTML processing hook
+          const htmlProcessHook = (compilation.hooks as any).processAssets;
+          
+          if (htmlProcessHook) {
+            htmlProcessHook.tap(
+              {
+                name: pluginName,
+                stage: (compilation.constructor as any).PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE,
+              },
+              () => {
+                // Find and modify HTML assets
+                const assets = compilation.getAssets();
+                
+                assets.forEach((asset) => {
+                  if (asset.name.endsWith('.html')) {
+                    const html = asset.source.source().toString();
+                    const modifiedHtml = this.transformHtml(html);
+                    
+                    compilation.updateAsset(asset.name, {
+                      source: () => modifiedHtml,
+                      size: () => modifiedHtml.length,
+                    } as any);
+                  }
+                });
+              }
+            );
+          }
+          
+          return data;
+        });
       }
+    });
 
-      const logoHtml = fs.readFileSync(
-        path.resolve(config.publicDir, logoSrc),
-        "utf8"
+    // Alternative approach: Use processAssets hook directly
+    compiler.hooks.compilation.tap(pluginName, (compilation) => {
+      compilation.hooks.processAssets.tap(
+        {
+          name: pluginName,
+          stage: (compiler.webpack as any).Compilation?.PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE ?? 100,
+        },
+        () => {
+          const assets = compilation.getAssets();
+          
+          assets.forEach((asset) => {
+            if (asset.name.endsWith('.html')) {
+              const html = asset.source.source().toString();
+              const modifiedHtml = this.transformHtml(html);
+              
+              compilation.updateAsset(asset.name, {
+                source: () => modifiedHtml,
+                size: () => modifiedHtml.length,
+              } as any);
+            }
+          });
+        }
       );
+    });
+  }
 
-      const splash = splashTemplate({
-        logoHtml,
-        loaderType,
-        minDurationMs,
-      });
+  private transformHtml(html: string): string {
+    const baseStyles = readPluginFile("styles.css");
 
-      const b = baseStyles.replace("/*BG_SPLASH*/", splashBg);
-      const l = loaderStyles.replace("/*BG_LOADER*/", loaderBg);
+    let loaderStyles = "";
 
-      const styles = `<style id="vpss-style">${b}${l}</style>`;
+    if (this.options.loaderType === "line") {
+      loaderStyles = readPluginFile("loaders/line.css");
+    } else if (this.options.loaderType === "dots") {
+      loaderStyles = readPluginFile("loaders/dots.css");
+    }
 
-      return (
-        html
-          // Add styles to end of head
-          .replace("</head>", `${styles}</head>`)
-          // Add splash screen to end of body
-          .replace("</body>", `${splash}</body>`)
+    // Resolve logo path - try multiple locations
+    let logoHtml = "";
+    const possiblePaths = [
+      path.resolve(this.publicDir, this.options.logoSrc),
+      path.resolve(process.cwd(), this.publicDir, this.options.logoSrc),
+      path.resolve(process.cwd(), "public", this.options.logoSrc),
+    ];
+
+    for (const logoPath of possiblePaths) {
+      if (fs.existsSync(logoPath)) {
+        logoHtml = fs.readFileSync(logoPath, "utf8");
+        break;
+      }
+    }
+
+    if (!logoHtml) {
+      console.warn(
+        `[rspack-plugin-splash-screen] Logo not found at any of: ${possiblePaths.join(", ")}`
       );
-    },
-  } satisfies PluginOption;
+    }
+
+    const splash = splashTemplate({
+      logoHtml,
+      loaderType: this.options.loaderType,
+      minDurationMs: this.options.minDurationMs,
+    });
+
+    const b = baseStyles.replace("/*BG_SPLASH*/", this.options.splashBg);
+    const l = loaderStyles.replace("/*BG_LOADER*/", this.options.loaderBg);
+
+    const styles = `<style id="vpss-style">${b}${l}</style>`;
+
+    return (
+      html
+        // Add styles to end of head
+        .replace("</head>", `${styles}</head>`)
+        // Add splash screen to end of body
+        .replace("</body>", `${splash}</body>`)
+    );
+  }
+}
+
+// Export a factory function for easier usage (similar to Vite plugin style)
+export function splashScreen(options: PluginOptions) {
+  return new RspackSplashScreenPlugin(options);
 }
 
 function splashTemplate({
@@ -178,7 +267,7 @@ function splashTemplate({
 }
 
 // TODO: is there an easier way to resolve static files relative to the plugin?
-const pluginPath = "node_modules/vite-plugin-splash-screen/src";
+const pluginPath = "node_modules/rspack-plugin-splash-screen/src";
 
 function readPluginFile(filePath: string) {
   return fs.readFileSync(path.resolve(pluginPath, filePath), "utf8");
