@@ -3,7 +3,7 @@ import path from "path";
 import type { Compiler, RspackPluginInstance } from "@rspack/core";
 import { assets } from "./assets";
 
-type LoaderType = "line" | "dots" | "none";
+type LoaderType = "line" | "dots" | "spinner" | "pulse" | "orbit" | "none";
 
 type PluginOptions = {
   logoSrc: string;
@@ -87,6 +87,12 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
       loaderStyles = assets.lineCSS;
     } else if (this.options.loaderType === "dots") {
       loaderStyles = assets.dotsCSS;
+    } else if (this.options.loaderType === "spinner") {
+      loaderStyles = assets.spinnerCSS;
+    } else if (this.options.loaderType === "pulse") {
+      loaderStyles = assets.pulseCSS;
+    } else if (this.options.loaderType === "orbit") {
+      loaderStyles = assets.orbitCSS;
     }
 
     // Resolve logo path - try multiple locations
@@ -209,6 +215,12 @@ function splashTemplate({
     loaderHtml = assets.lineHTML;
   } else if (loaderType === "dots") {
     loaderHtml = assets.dotsHTML;
+  } else if (loaderType === "spinner") {
+    loaderHtml = assets.spinnerHTML;
+  } else if (loaderType === "pulse") {
+    loaderHtml = assets.pulseHTML;
+  } else if (loaderType === "orbit") {
+    loaderHtml = assets.orbitHTML;
   }
 
   // Only replace IDs in loader HTML if the configured ID is different from the default 'rpss'

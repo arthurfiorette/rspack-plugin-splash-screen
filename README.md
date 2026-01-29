@@ -143,10 +143,17 @@ new RspackSplashScreenPlugin({
 
 What type of loading indicator should be displayed below the logo.
 
-Available options: `"line"` (default), `"dots"`, `"none"`.
+Available options: `"line"` (default), `"dots"`, `"spinner"`, `"pulse"`, `"orbit"`, `"none"`.
 
-With `"dots"` you get the following loading indicator:
+**Line** (default) - A horizontal progress bar with animated waves:
+```js
+new RspackSplashScreenPlugin({
+  logoSrc: "logo.svg",
+  loaderType: "line",
+});
+```
 
+**Dots** - Animated bouncing dots:
 ```js
 new RspackSplashScreenPlugin({
   logoSrc: "logo.svg",
@@ -156,8 +163,31 @@ new RspackSplashScreenPlugin({
 
 ![Demo of rspack-plugin-splash-screen with dots style loading indicator](media/demo-2.gif)
 
-Provide `"none"` to hide the loading indicator:
+**Spinner** - Classic circular spinner:
+```js
+new RspackSplashScreenPlugin({
+  logoSrc: "logo.svg",
+  loaderType: "spinner",
+});
+```
 
+**Pulse** - Pulsating circle animation:
+```js
+new RspackSplashScreenPlugin({
+  logoSrc: "logo.svg",
+  loaderType: "pulse",
+});
+```
+
+**Orbit** - Four dots orbiting in a circular pattern:
+```js
+new RspackSplashScreenPlugin({
+  logoSrc: "logo.svg",
+  loaderType: "orbit",
+});
+```
+
+**None** - Hide the loading indicator:
 ```js
 new RspackSplashScreenPlugin({
   logoSrc: "logo.svg",
