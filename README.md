@@ -12,7 +12,7 @@
   <br/>
 </div>
 
-![Demo of rspack-plugin-splash-screen with line style loading indicator](media/demo-1.gif)
+![Demo of rspack-plugin-splash-screen with line style loading indicator](https://example.com/demo-line.gif)
 
 ## 💦 Features
 
@@ -163,7 +163,7 @@ new RspackSplashScreenPlugin({
 });
 ```
 
-![Demo of rspack-plugin-splash-screen with dots style loading indicator](media/demo-2.gif)
+![Demo of rspack-plugin-splash-screen with dots style loading indicator](https://example.com/demo-dots.gif)
 
 **Spinner** - Classic circular spinner:
 
@@ -201,7 +201,7 @@ new RspackSplashScreenPlugin({
 });
 ```
 
-![Demo of rspack-plugin-splash-screen with no loading indicator](media/demo-3.gif)
+![Demo of rspack-plugin-splash-screen with no loading indicator](https://example.com/demo-none.gif)
 
 ### `loaderBg`
 

@@ -3,17 +3,76 @@ import path from 'node:path';
 import type { Compiler, RspackPluginInstance } from '@rspack/core';
 import { assets } from './assets';
 
-type LoaderType = 'line' | 'dots' | 'spinner' | 'pulse' | 'orbit' | 'none';
+/**
+ * Type of loading indicator to display
+ * @public
+ */
+export type LoaderType = 'line' | 'dots' | 'spinner' | 'pulse' | 'orbit' | 'none';
 
-type PluginOptions = {
+/**
+ * Configuration options for the Rspack Splash Screen Plugin
+ * @public
+ */
+export type PluginOptions = {
+  /**
+   * Path to the logo image file relative to the public directory.
+   * Supports SVG (inlined as markup) and raster formats (PNG, JPG, GIF, WebP, BMP - base64 encoded).
+   * @example 'logo.svg' or 'images/logo.png'
+   */
   logoSrc: string;
+
+  /**
+   * Background color of the splash screen overlay
+   * @defaultValue '#ffffff'
+   */
   splashBg?: string;
+
+  /**
+   * Color of the loading indicator
+   * @defaultValue '#0072f5'
+   */
   loaderBg?: string;
+
+  /**
+   * Type of loading indicator animation to display below the logo
+   * @defaultValue 'line'
+   */
   loaderType?: LoaderType;
+
+  /**
+   * Minimum duration (in milliseconds) to display the splash screen before allowing it to be hidden
+   * @defaultValue 0
+   */
   minDurationMs?: number;
+
+  /**
+   * Custom ID for the splash screen element and CSS classes. Useful for avoiding conflicts.
+   * @defaultValue 'rpss'
+   */
   id?: string;
 };
 
+/**
+ * Rspack plugin that adds a splash screen to your application.
+ * The splash screen is injected directly into the HTML at build time for optimal performance.
+ *
+ * @example
+ * ```typescript
+ * import { RspackSplashScreenPlugin } from 'rspack-plugin-splash-screen';
+ *
+ * export default {
+ *   plugins: [
+ *     new RspackSplashScreenPlugin({
+ *       logoSrc: 'logo.svg',
+ *       loaderType: 'spinner',
+ *       minDurationMs: 1000
+ *     })
+ *   ]
+ * };
+ * ```
+ *
+ * @public
+ */
 export class RspackSplashScreenPlugin implements RspackPluginInstance {
   private options: Required<PluginOptions>;
   private publicDir: string;
@@ -227,7 +286,7 @@ function splashTemplate({
       <div class="${id}-logo">${logoHtml}</div>
       ${loaderHtml}
     </div>
-    <script>
+    <script id="${id}-script">
       (function () {
         const id = "${id}";
         const url = new URL(window.location.href);
@@ -245,6 +304,9 @@ function splashTemplate({
           },
           getStyles: function() {
             return document.getElementById(id + "-style");
+          },
+          getScript: function() {
+            return document.getElementById(id + "-script");
           },
           show: function () {
             const element = this.getElement();
@@ -281,11 +343,11 @@ function splashTemplate({
           remove: function () {
             const element = this.getElement();
             const styles = this.getStyles();
+            const script = this.getScript();
 
-            if (element && styles) {
-              element.remove();
-              styles.remove();
-            }
+            if (element) element.remove();
+            if (styles) styles.remove();
+            if (script) script.remove();
           }
         };
 

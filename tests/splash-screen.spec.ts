@@ -1,4 +1,11 @@
 import { expect, test } from '@playwright/test';
+import type { SplashScreenAPI } from '../src/runtime';
+
+declare global {
+  interface Window {
+    __RPSS__?: SplashScreenAPI;
+  }
+}
 
 test.describe('Splash Screen Plugin', () => {
   test('should display splash screen on initial load', async ({ page }) => {
@@ -116,11 +123,6 @@ test.describe('Splash Screen Plugin', () => {
 
     // Wait for the animation to start
     await page.waitForTimeout(2000);
-
-    // Check that opacity transition happens
-    const _opacityBefore = await splashScreen.evaluate((el) => {
-      return window.getComputedStyle(el).opacity;
-    });
 
     // Wait a bit more for animation
     await page.waitForTimeout(500);
