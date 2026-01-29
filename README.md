@@ -230,6 +230,42 @@ new RspackSplashScreenPlugin({
 });
 ```
 
+### `minify`
+
+Whether to minify the injected HTML and CSS using SWC (default `true`).
+
+Minification reduces the size of the injected splash screen code but adds a small build-time cost. You can disable it if you prefer unminified output or if you're experiencing issues with minification.
+
+Example:
+
+```js
+new RspackSplashScreenPlugin({
+  logoSrc: 'logo.svg',
+  minify: false // Disable minification
+});
+```
+
+### `id`
+
+Custom ID for the splash screen element and CSS classes (default `rpss`).
+
+This option is useful for avoiding conflicts with other plugins or libraries that might use the same IDs. When you change the ID, all CSS classes, CSS variables, and the global API will use your custom ID.
+
+Example:
+
+```js
+new RspackSplashScreenPlugin({
+  logoSrc: 'logo.svg',
+  id: 'my-splash' // Changes element ID, classes, and CSS variables to use 'my-splash'
+});
+```
+
+With a custom ID:
+- Element ID becomes `#my-splash` instead of `#rpss`
+- CSS classes become `.my-splash-*` instead of `.rpss-*`
+- CSS variables become `--my-splash-*` instead of `--rpss-*`
+- Global API becomes `window.__MY_SPLASH__` instead of `window.__RPSS__`
+
 ### Dynamic colors
 
 If your app supports theming (eg. light and dark mode), you can dynamically change the colors of the splash screen using CSS variables.

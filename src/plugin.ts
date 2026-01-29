@@ -51,6 +51,13 @@ export type PluginOptions = {
    * @defaultValue 'rpss'
    */
   id?: string;
+
+  /**
+   * Whether to minify the injected HTML and CSS using SWC.
+   * Reduces bundle size but adds a small build-time cost.
+   * @defaultValue true
+   */
+  minify?: boolean;
 };
 
 /**
@@ -89,7 +96,8 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
       loaderType: options.loaderType ?? 'line',
       loaderBg: options.loaderBg ?? '#0072f5',
       splashBg: options.splashBg ?? '#ffffff',
-      id: options.id ?? 'rpss'
+      id: options.id ?? 'rpss',
+      minify: options.minify ?? true
     };
 
     this.publicDir = 'public'; // Default public directory
@@ -195,15 +203,16 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
       id: this.options.id
     });
 
-    const minifiedStyles = tryMinify(styles, { minifyCss: true });
-    const minifiedSplash = tryMinify(splash, { minifyCss: true });
+    // Conditionally minify based on the minify option
+    const finalStyles = this.options.minify ? tryMinify(styles, { minifyCss: true }) : styles;
+    const finalSplash = this.options.minify ? tryMinify(splash, { minifyCss: true }) : splash;
 
     return (
       html
         // Add styles to end of head
-        .replace('</head>', `${minifiedStyles}</head>`)
+        .replace('</head>', `${finalStyles}</head>`)
         // Add splash screen to end of body
-        .replace('</body>', `${minifiedSplash}</body>`)
+        .replace('</body>', `${finalSplash}</body>`)
     );
   }
 
