@@ -37,52 +37,17 @@ export class RspackSplashScreenPlugin {
   apply(compiler: Compiler) {
     const pluginName = "RspackSplashScreenPlugin";
 
-    // Hook into the compilation process to modify HTML
-    compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
-      // Use the HtmlRspackPlugin hooks if available
-      const hooks = (compilation.hooks as any).htmlRspackPluginAlterAssetTags;
-      
-      if (hooks) {
-        hooks.tap(pluginName, (data: any) => {
-          // Get the HTML processing hook
-          const htmlProcessHook = (compilation.hooks as any).processAssets;
-          
-          if (htmlProcessHook) {
-            htmlProcessHook.tap(
-              {
-                name: pluginName,
-                stage: (compilation.constructor as any).PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE,
-              },
-              () => {
-                // Find and modify HTML assets
-                const assets = compilation.getAssets();
-                
-                assets.forEach((asset) => {
-                  if (asset.name.endsWith('.html')) {
-                    const html = asset.source.source().toString();
-                    const modifiedHtml = this.transformHtml(html);
-                    
-                    compilation.updateAsset(asset.name, {
-                      source: () => modifiedHtml,
-                      size: () => modifiedHtml.length,
-                    } as any);
-                  }
-                });
-              }
-            );
-          }
-          
-          return data;
-        });
-      }
-    });
-
-    // Alternative approach: Use processAssets hook directly
+    // Hook into the compilation process to modify HTML assets
     compiler.hooks.compilation.tap(pluginName, (compilation) => {
+      // Process HTML assets after they are created
+      const PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE = 
+        (compiler.webpack as any).Compilation?.PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE ?? 
+        100; // Fallback to stage 100 if constant not available
+      
       compilation.hooks.processAssets.tap(
         {
           name: pluginName,
-          stage: (compiler.webpack as any).Compilation?.PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE ?? 100,
+          stage: PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE,
         },
         () => {
           const assets = compilation.getAssets();
@@ -92,6 +57,7 @@ export class RspackSplashScreenPlugin {
               const html = asset.source.source().toString();
               const modifiedHtml = this.transformHtml(html);
               
+              // Create a source object that matches Rspack's expected interface
               compilation.updateAsset(asset.name, {
                 source: () => modifiedHtml,
                 size: () => modifiedHtml.length,
@@ -266,8 +232,34 @@ function splashTemplate({
   `;
 }
 
-// TODO: is there an easier way to resolve static files relative to the plugin?
-const pluginPath = "node_modules/rspack-plugin-splash-screen/src";
+// Resolve plugin files relative to this file's location
+// Using __dirname for CommonJS or path resolution for ESM
+function getPluginSrcPath(): string {
+  // Try multiple resolution strategies to find the plugin source files
+  const possiblePaths = [
+    // Development/local link scenario
+    path.resolve(__dirname, "."),
+    path.resolve(__dirname, ".."),
+    // Installed in node_modules
+    path.resolve(process.cwd(), "node_modules/rspack-plugin-splash-screen/src"),
+    path.resolve(process.cwd(), "node_modules/rspack-plugin-splash-screen/dist/plugin"),
+    // pnpm with hoisting disabled
+    path.resolve(__dirname, "../../rspack-plugin-splash-screen/src"),
+  ];
+
+  // Find the first path that contains the required files
+  for (const basePath of possiblePaths) {
+    const stylesPath = path.resolve(basePath, "styles.css");
+    if (fs.existsSync(stylesPath)) {
+      return basePath;
+    }
+  }
+
+  // Fallback to __dirname
+  return __dirname;
+}
+
+const pluginPath = getPluginSrcPath();
 
 function readPluginFile(filePath: string) {
   return fs.readFileSync(path.resolve(pluginPath, filePath), "utf8");
