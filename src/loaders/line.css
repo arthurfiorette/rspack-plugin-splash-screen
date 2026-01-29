@@ -1,4 +1,4 @@
-#vpss .vpss-loader {
+#rpss .rpss-loader {
   position: relative;
   overflow: hidden;
   width: 100px;
@@ -6,28 +6,28 @@
   border-radius: 2px;
 }
 
-#vpss .vpss-loader .vpss-line {
+#rpss .rpss-loader .rpss-line {
   position: absolute;
   background: rgba(150, 150, 150, 0.4);
   width: 150%;
   height: 4px;
 }
 
-#vpss .vpss-loader .vpss-subline {
+#rpss .rpss-loader .rpss-subline {
   position: absolute;
-  background: var(--vpss-bg-loader, /*BG_LOADER*/);
+  background: var(--rpss-bg-loader, /*BG_LOADER*/);
   height: 4px;
 }
 
-#vpss .vpss-loader .vpss-inc {
-  animation: vpss-increase 1.5s infinite;
+#rpss .rpss-loader .rpss-inc {
+  animation: rpss-increase 1.5s infinite;
 }
 
-#vpss .vpss-loader .vpss-dec {
-  animation: vpss-decrease 1.5s 0.5s infinite;
+#rpss .rpss-loader .rpss-dec {
+  animation: rpss-decrease 1.5s 0.5s infinite;
 }
 
-@keyframes vpss-increase {
+@keyframes rpss-increase {
   from {
     left: -5%;
     width: 5%;
@@ -38,7 +38,7 @@
   }
 }
 
-@keyframes vpss-decrease {
+@keyframes rpss-decrease {
   from {
     left: -80%;
     width: 80%;
