@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Compiler, RspackPluginInstance } from '@rspack/core';
+import { minifyFragmentSync, type Options } from '@swc/html';
 import { assets } from './assets';
 
 /**
@@ -176,13 +177,6 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
       );
     }
 
-    const splash = splashTemplate({
-      logoHtml,
-      loaderType: this.options.loaderType,
-      minDurationMs: this.options.minDurationMs,
-      id: this.options.id
-    });
-
     // Only replace IDs in styles if the configured ID is different from the default 'rpss'
     let b = baseStyles.replace('/*BG_SPLASH*/', this.options.splashBg);
     let l = loaderStyles.replace('/*BG_LOADER*/', this.options.loaderBg);
@@ -194,12 +188,22 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
 
     const styles = `<style id="${this.options.id}-style">${b}${l}</style>`;
 
+    const splash = splashTemplate({
+      logoHtml,
+      loaderType: this.options.loaderType,
+      minDurationMs: this.options.minDurationMs,
+      id: this.options.id
+    });
+
+    const minifiedStyles = tryMinify(styles, { minifyCss: true });
+    const minifiedSplash = tryMinify(splash, { minifyCss: true });
+
     return (
       html
         // Add styles to end of head
-        .replace('</head>', `${styles}</head>`)
+        .replace('</head>', `${minifiedStyles}</head>`)
         // Add splash screen to end of body
-        .replace('</body>', `${splash}</body>`)
+        .replace('</body>', `${minifiedSplash}</body>`)
     );
   }
 
@@ -281,7 +285,7 @@ function splashTemplate({
     loaderHtml = loaderHtml.replace(/rpss-/g, `${id}-`);
   }
 
-  return /*html*/ `
+  return /* html */ `
     <div id="${id}">
       <div class="${id}-logo">${logoHtml}</div>
       ${loaderHtml}
@@ -292,7 +296,7 @@ function splashTemplate({
         const url = new URL(window.location.href);
         const urlParams = new URLSearchParams(url.search)
         const param = urlParams.get(id);
-        
+
         // Setup global options
         window.__RPSS__ = {
           id: id,
@@ -356,7 +360,7 @@ function splashTemplate({
         } else {
           window.__RPSS__.show();
         }
-        
+
         // Remove query param from URL
         if (param) {
           urlParams.delete(id);
@@ -366,4 +370,16 @@ function splashTemplate({
       })();
     </script>
   `;
+}
+
+function tryMinify(content: string, options?: Options) {
+  try {
+    return minifyFragmentSync(content, options).code;
+  } catch (error) {
+    console.warn(
+      `[rspack-plugin-splash-screen] Minification failed: ${error}. Using unminified content.`
+    );
+
+    return content;
+  }
 }

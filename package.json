@@ -45,6 +45,9 @@
     "test-types": "tsc --noEmit",
     "test-ui": "playwright test --ui"
   },
+  "dependencies": {
+    "@swc/html": "catalog:"
+  },
   "devDependencies": {
     "@arthurfiorette/biomejs-config": "catalog:",
     "@biomejs/biome": "catalog:",

@@ -31,8 +31,6 @@ declare global {
   }
 }
 
-const rpss = (window.__RPSS__ || {}) as SplashScreenAPI;
-
 /**
  * Hides the splash screen with a smooth fade-out animation.
  * This function respects the `minDurationMs` option if configured.
@@ -48,6 +46,8 @@ const rpss = (window.__RPSS__ || {}) as SplashScreenAPI;
  * @public
  */
 export async function hideSplashScreen() {
+  const rpss: SplashScreenAPI = window.__RPSS__ || { id: 'rpss' };
+
   // Splash screen already hidden, bail out
   if (rpss.hidden) return;
 
