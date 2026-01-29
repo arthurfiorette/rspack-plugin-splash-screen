@@ -6,6 +6,15 @@ settings:
 
 catalogs:
   default:
+    '@rslib/core':
+      specifier: ^0.19.3
+      version: 0.19.3
+    '@rspack/core':
+      specifier: ^1.1.7
+      version: 1.7.4
+    '@types/node':
+      specifier: ^20.11.30
+      version: 20.19.30
     '@types/react':
       specifier: ^18.2.66
       version: 18.3.27
@@ -27,16 +36,16 @@ importers:
   .:
     devDependencies:
       '@rslib/core':
-        specifier: ^0.19.3
+        specifier: 'catalog:'
         version: 0.19.3(typescript@5.9.3)
       '@rspack/core':
-        specifier: ^1.1.7
+        specifier: 'catalog:'
         version: 1.7.4(@swc/helpers@0.5.18)
       '@types/node':
-        specifier: ^20.11.30
+        specifier: 'catalog:'
         version: 20.19.30
       typescript:
-        specifier: ^5.4.3
+        specifier: 'catalog:'
         version: 5.9.3
 
   example:

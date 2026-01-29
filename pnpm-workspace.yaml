@@ -8,3 +8,5 @@ catalog:
   'react-dom': ^18.2.0
   '@types/react': ^18.2.66
   '@types/react-dom': ^18.2.22
+  '@rslib/core': ^0.19.3
+  '@rspack/core': ^1.1.7

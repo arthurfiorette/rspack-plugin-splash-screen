@@ -1,6 +1,6 @@
 import { defineConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
-import { splashScreen } from 'rspack-plugin-splash-screen';
+import { RspackSplashScreenPlugin } from 'rspack-plugin-splash-screen';
 
 export default defineConfig({
   plugins: [pluginReact()],
@@ -12,7 +12,7 @@ export default defineConfig({
   tools: {
     rspack: {
       plugins: [
-        splashScreen({
+        new RspackSplashScreenPlugin({
           minDurationMs: 2000, // show splash screen for at least 2 seconds
           logoSrc: 'vite.svg',
           loaderType: 'line',

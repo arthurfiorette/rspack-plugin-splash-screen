@@ -17,6 +17,18 @@ export default defineConfig({
           root: './dist/plugin',
         },
       },
+      tools: {
+        rspack: {
+          module: {
+            rules: [
+              {
+                resourceQuery: /raw/,
+                type: 'asset/source',
+              },
+            ],
+          },
+        },
+      },
     },
     {
       // Plugin entry - CJS
@@ -31,6 +43,18 @@ export default defineConfig({
       output: {
         distPath: {
           root: './dist/plugin',
+        },
+      },
+      tools: {
+        rspack: {
+          module: {
+            rules: [
+              {
+                resourceQuery: /raw/,
+                type: 'asset/source',
+              },
+            ],
+          },
         },
       },
     },

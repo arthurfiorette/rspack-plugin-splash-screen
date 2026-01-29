@@ -37,9 +37,9 @@
     "release": "pnpm run build && np"
   },
   "devDependencies": {
-    "@rslib/core": "^0.19.3",
-    "@types/node": "^20.11.30",
-    "typescript": "^5.4.3",
-    "@rspack/core": "^1.1.7"
+    "@rslib/core": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "@rspack/core": "catalog:"
   }
 }

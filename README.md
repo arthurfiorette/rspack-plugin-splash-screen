@@ -53,14 +53,14 @@ The only required option is `logoSrc`, which is the path (relative to the public
 ```js
 import { defineConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
-import { splashScreen } from 'rspack-plugin-splash-screen';
+import { RspackSplashScreenPlugin } from 'rspack-plugin-splash-screen';
 
 export default defineConfig({
   plugins: [pluginReact()],
   tools: {
     rspack: {
       plugins: [
-        splashScreen({
+        new RspackSplashScreenPlugin({
           logoSrc: 'logo.svg',
         }),
       ],
@@ -74,11 +74,11 @@ export default defineConfig({
 If you're using Rspack directly without Rsbuild, you can add the plugin to your Rspack config:
 
 ```js
-import { splashScreen } from 'rspack-plugin-splash-screen';
+import { RspackSplashScreenPlugin } from 'rspack-plugin-splash-screen';
 
 export default {
   plugins: [
-    splashScreen({
+    new RspackSplashScreenPlugin({
       logoSrc: 'logo.svg',
     }),
   ],
@@ -133,7 +133,7 @@ This is useful to prevent the splash screen from flickering in case the app is i
 For example, to display the splash screen for at least 2 seconds:
 
 ```js
-splashScreen({
+new RspackSplashScreenPlugin({
   logoSrc: "logo.svg",
   minDurationMs: 2000,
 });
@@ -148,7 +148,7 @@ Available options: `"line"` (default), `"dots"`, `"none"`.
 With `"dots"` you get the following loading indicator:
 
 ```js
-splashScreen({
+new RspackSplashScreenPlugin({
   logoSrc: "logo.svg",
   loaderType: "dots",
 });
@@ -159,7 +159,7 @@ splashScreen({
 Provide `"none"` to hide the loading indicator:
 
 ```js
-splashScreen({
+new RspackSplashScreenPlugin({
   logoSrc: "logo.svg",
   loaderType: "none",
 });
@@ -174,7 +174,7 @@ The background color of the loading indicator (default `#0072f5`).
 Example:
 
 ```js
-splashScreen({
+new RspackSplashScreenPlugin({
   logoSrc: "logo.svg",
   loaderType: "line",
   loaderBg: "#ff0000",
@@ -188,7 +188,7 @@ The background color of the splash screen (default `#ffffff`).
 Example:
 
 ```js
-splashScreen({
+new RspackSplashScreenPlugin({
   logoSrc: "logo.svg",
   splashBg: "#000000",
 });

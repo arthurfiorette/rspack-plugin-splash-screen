@@ -1,5 +1,5 @@
 // @ts-ignore
-const vpss = (window.__VPSS__ || {}) as {
+const rpss = (window.__RPSS__ || {}) as {
   hidden?: boolean;
   getElement?: () => HTMLElement | null;
   getStyles?: () => HTMLStyleElement | null;
@@ -8,10 +8,10 @@ const vpss = (window.__VPSS__ || {}) as {
 
 export async function hideSplashScreen() {
   // Splash screen already hidden, bail out
-  if (vpss.hidden) return;
+  if (rpss.hidden) return;
 
-  const element = vpss.getElement?.();
-  const styles = vpss.getStyles?.();
+  const element = rpss.getElement?.();
+  const styles = rpss.getStyles?.();
 
   if (!element || !styles) {
     console.error(
@@ -20,5 +20,5 @@ export async function hideSplashScreen() {
     return;
   }
 
-  await vpss.hide?.();
+  await rpss.hide?.();
 }
