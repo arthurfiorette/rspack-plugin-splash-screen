@@ -89,14 +89,17 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
       path.resolve(process.cwd(), "public", this.options.logoSrc),
     ];
 
+    let foundLogoPath: string | null = null;
     for (const logoPath of possiblePaths) {
       if (fs.existsSync(logoPath)) {
-        logoHtml = fs.readFileSync(logoPath, "utf8");
+        foundLogoPath = logoPath;
         break;
       }
     }
 
-    if (!logoHtml) {
+    if (foundLogoPath) {
+      logoHtml = this.processLogo(foundLogoPath);
+    } else {
       console.warn(
         `[rspack-plugin-splash-screen] Logo not found at any of: ${possiblePaths.join(", ")}`
       );
@@ -120,6 +123,49 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
         // Add splash screen to end of body
         .replace("</body>", `${splash}</body>`)
     );
+  }
+
+  private processLogo(logoPath: string): string {
+    const ext = path.extname(logoPath).toLowerCase();
+    const fileBuffer = fs.readFileSync(logoPath);
+    const fileSizeKB = fileBuffer.length / 1024;
+
+    // Recommended max size: 50KB for optimal splash screen performance
+    const MAX_RECOMMENDED_SIZE_KB = 50;
+
+    if (fileSizeKB > MAX_RECOMMENDED_SIZE_KB) {
+      console.warn(
+        `[rspack-plugin-splash-screen] Logo size (${fileSizeKB.toFixed(1)}KB) exceeds recommended maximum of ${MAX_RECOMMENDED_SIZE_KB}KB. ` +
+        `This may slow down initial page load. Consider optimizing your logo image.`
+      );
+    }
+
+    // SVG files can be inlined directly as text
+    if (ext === ".svg") {
+      return fileBuffer.toString("utf8");
+    }
+
+    // Non-SVG images need to be base64 encoded
+    const mimeTypes: Record<string, string> = {
+      ".png": "image/png",
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".gif": "image/gif",
+      ".webp": "image/webp",
+      ".bmp": "image/bmp",
+    };
+
+    const mimeType = mimeTypes[ext];
+    if (!mimeType) {
+      console.warn(
+        `[rspack-plugin-splash-screen] Unsupported image format: ${ext}. ` +
+        `Supported formats: SVG, PNG, JPG, JPEG, GIF, WebP, BMP.`
+      );
+      return "";
+    }
+
+    const base64Data = fileBuffer.toString("base64");
+    return `<img src="data:${mimeType};base64,${base64Data}" alt="Logo" />`;
   }
 }
 

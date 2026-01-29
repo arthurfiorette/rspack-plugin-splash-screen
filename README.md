@@ -86,9 +86,14 @@ export default {
 ```
 
 > [!IMPORTANT]  
-> **Only SVG logos are supported at the moment so that the logo can be inlined to the HTML file**.
+> **Logo images are inlined into the HTML file for optimal performance.**
 >
-> Make sure the logo has appropriate dimensions and is optimized for the web. See [SVGOMG](https://jakearchibald.github.io/svgomg/) for optimizing SVG files.
+> - **Supported formats**: SVG, PNG, JPG/JPEG, GIF, WebP, BMP
+> - **SVG images** are embedded directly as inline SVG markup
+> - **Raster images** (PNG, JPG, etc.) are automatically base64-encoded and embedded as data URLs
+> - **File size warning**: Images larger than 50KB will trigger a warning, as the splash screen should load quickly. Consider optimizing your logo:
+>   - SVG: Use [SVGOMG](https://jakearchibald.github.io/svgomg/) to optimize SVG files
+>   - PNG/JPG: Use tools like [TinyPNG](https://tinypng.com/) or [Squoosh](https://squoosh.app/) to compress images
 
 Then in your application code (written in React, Vue, Svelte, whatever), you can hide the splash screen when the application is ready.
 
