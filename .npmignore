@@ -1,0 +1,8 @@
+# white list approach
+
+*
+
+!LICENSE
+!README.md
+
+!dist/**

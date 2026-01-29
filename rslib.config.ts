@@ -6,16 +6,16 @@ export default defineConfig({
       // Plugin entry - ESM
       format: 'esm',
       syntax: 'es2021',
-      dts: true,
+      dts: { bundle: { bundledPackages: [] } },
       source: {
         entry: {
-          plugin: './src/plugin.ts',
-        },
+          plugin: './src/plugin.ts'
+        }
       },
       output: {
         distPath: {
-          root: './dist/plugin',
-        },
+          root: './dist/plugin'
+        }
       },
       tools: {
         rspack: {
@@ -23,12 +23,12 @@ export default defineConfig({
             rules: [
               {
                 resourceQuery: /raw/,
-                type: 'asset/source',
-              },
-            ],
-          },
-        },
-      },
+                type: 'asset/source'
+              }
+            ]
+          }
+        }
+      }
     },
     {
       // Plugin entry - CJS
@@ -37,13 +37,13 @@ export default defineConfig({
       dts: false, // Only generate types once
       source: {
         entry: {
-          plugin: './src/plugin.ts',
-        },
+          plugin: './src/plugin.ts'
+        }
       },
       output: {
         distPath: {
-          root: './dist/plugin',
-        },
+          root: './dist/plugin'
+        }
       },
       tools: {
         rspack: {
@@ -51,28 +51,28 @@ export default defineConfig({
             rules: [
               {
                 resourceQuery: /raw/,
-                type: 'asset/source',
-              },
-            ],
-          },
-        },
-      },
+                type: 'asset/source'
+              }
+            ]
+          }
+        }
+      }
     },
     {
       // Runtime entry - ESM
       format: 'esm',
       syntax: 'es2021',
-      dts: true,
+      dts: { bundle: { bundledPackages: [] } },
       source: {
         entry: {
-          runtime: './src/runtime.ts',
-        },
+          runtime: './src/runtime.ts'
+        }
       },
       output: {
         distPath: {
-          root: './dist/runtime',
-        },
-      },
+          root: './dist/runtime'
+        }
+      }
     },
     {
       // Runtime entry - CJS
@@ -81,14 +81,14 @@ export default defineConfig({
       dts: false, // Only generate types once
       source: {
         entry: {
-          runtime: './src/runtime.ts',
-        },
+          runtime: './src/runtime.ts'
+        }
       },
       output: {
         distPath: {
-          root: './dist/runtime',
-        },
-      },
-    },
-  ],
+          root: './dist/runtime'
+        }
+      }
+    }
+  ]
 });

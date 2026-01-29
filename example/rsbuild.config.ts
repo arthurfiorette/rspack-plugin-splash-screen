@@ -6,23 +6,23 @@ export default defineConfig({
   plugins: [pluginReact()],
   source: {
     entry: {
-      index: './src/main.tsx',
-    },
+      index: './src/main.tsx'
+    }
   },
   tools: {
     rspack: {
       plugins: [
         new RspackSplashScreenPlugin({
-          minDurationMs: 2000, // show splash screen for at least 2 seconds
-          logoSrc: 'vite.svg',
+          minDurationMs: 2000,
+          logoSrc: 'rspack.svg',
           loaderType: 'line',
-          loaderBg: '#ffcb29',
-          splashBg: '#242424',
-        }),
-      ],
-    },
+          loaderBg: 'linear-gradient(279deg, #ff8b00 35.21%, #f93920 63.34%)',
+          splashBg: '#121212'
+        })
+      ]
+    }
   },
   server: {
-    port: 4000,
-  },
+    port: 4000
+  }
 });

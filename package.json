@@ -1,6 +1,6 @@
 {
   "name": "rspack-plugin-splash-screen",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "description": "Rspack plugin for adding a splash screen to your app",
   "keywords": [
     "rspack",
@@ -8,10 +8,16 @@
     "rsbuild",
     "splash-screen"
   ],
-  "author": "Teemu Taskula",
+  "bugs": {
+    "url": "https://github.com/arthurfiorette/rspack-plugin-splash-screen/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arthurfiorette/rspack-plugin-splash-screen.git"
+  },
+  "funding": "https://github.com/arthurfiorette/rspack-plugin-splash-screen?sponsor=1",
   "license": "MIT",
-  "main": "./dist/plugin/plugin.js",
-  "types": "./dist/plugin/plugin.d.ts",
+  "author": "Arthur Fiorette <npm@arthur.place>",
   "exports": {
     ".": {
       "require": "./dist/plugin/plugin.js",
@@ -24,25 +30,31 @@
       "types": "./dist/runtime/runtime.d.ts"
     }
   },
-  "files": [
-    "dist",
-    "src"
-  ],
+  "main": "./dist/plugin/plugin.js",
+  "types": "./dist/plugin/plugin.d.ts",
   "scripts": {
-    "test": "playwright test",
-    "test:build": "pnpm run build && cd example && pnpm run build",
-    "test:ui": "playwright test --ui",
     "build": "rslib build",
-    "watch": "rslib build --watch",
-    "example:link": "yalc publish --push && cd example && yalc add rspack-plugin-splash-screen && pnpm i",
-    "example:sync": "yalc push && cd example && pnpm i",
-    "release": "pnpm run build && np"
+    "build-all": "rslib build && pnpm -F example run build",
+    "format": "biome format --write .",
+    "lint": "biome check .",
+    "lint-ci": "biome ci .",
+    "lint-fix": "biome check --write --unsafe .",
+    "prepare": "husky",
+    "prepare-playwright": "playwright install --with-deps",
+    "test": "playwright test",
+    "test-types": "tsc --noEmit",
+    "test-ui": "playwright test --ui"
   },
   "devDependencies": {
+    "@arthurfiorette/biomejs-config": "catalog:",
+    "@biomejs/biome": "catalog:",
+    "@microsoft/api-extractor": "catalog:",
+    "@playwright/test": "catalog:",
     "@rslib/core": "catalog:",
-    "@types/node": "catalog:",
-    "typescript": "catalog:",
     "@rspack/core": "catalog:",
-    "@playwright/test": "catalog:"
-  }
+    "@types/node": "catalog:",
+    "husky": "catalog:",
+    "typescript": "catalog:"
+  },
+  "packageManager": "pnpm@10.28.2"
 }

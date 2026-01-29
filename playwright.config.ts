@@ -15,20 +15,20 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   // Reporter to use
   reporter: 'html',
-  
+
   use: {
     // Base URL to use in actions like `await page.goto('/')`
     baseURL: 'http://localhost:4000',
     // Collect trace when retrying the failed test
-    trace: 'on-first-retry',
+    trace: 'on-first-retry'
   },
 
   // Configure projects for major browsers
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
+      use: { ...devices['Desktop Chrome'] }
+    }
   ],
 
   // Run the dev server before starting the tests
@@ -36,6 +36,6 @@ export default defineConfig({
     command: 'cd example && pnpm run preview',
     url: 'http://localhost:4000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+    timeout: 120 * 1000
+  }
 });

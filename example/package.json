@@ -1,23 +1,23 @@
 {
   "name": "example",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "rsbuild dev",
     "build": "rsbuild build",
+    "dev": "rsbuild dev",
     "preview": "rsbuild preview"
   },
   "dependencies": {
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "rspack-plugin-splash-screen": "workspace:*"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@rsbuild/core": "^1.1.14",
-    "@rsbuild/plugin-react": "^1.0.8",
+    "@rsbuild/core": "catalog:",
+    "@rsbuild/plugin-react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "rspack-plugin-splash-screen": "workspace:*",
     "typescript": "catalog:"
   }
 }

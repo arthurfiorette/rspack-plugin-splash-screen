@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 const rpss = (window.__RPSS__ || {}) as {
   hidden?: boolean;
   getElement?: () => HTMLElement | null;
@@ -15,7 +15,7 @@ export async function hideSplashScreen() {
 
   if (!element || !styles) {
     console.error(
-      "Splash screen not found. Did you forget to add the `rspack-plugin-splash-screen` plugin?"
+      'Splash screen not found. Did you forget to add the `rspack-plugin-splash-screen` plugin?'
     );
     return;
   }

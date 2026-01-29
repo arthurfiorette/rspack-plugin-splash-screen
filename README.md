@@ -61,11 +61,11 @@ export default defineConfig({
     rspack: {
       plugins: [
         new RspackSplashScreenPlugin({
-          logoSrc: 'logo.svg',
-        }),
-      ],
-    },
-  },
+          logoSrc: 'logo.svg'
+        })
+      ]
+    }
+  }
 });
 ```
 
@@ -79,9 +79,9 @@ import { RspackSplashScreenPlugin } from 'rspack-plugin-splash-screen';
 export default {
   plugins: [
     new RspackSplashScreenPlugin({
-      logoSrc: 'logo.svg',
-    }),
-  ],
+      logoSrc: 'logo.svg'
+    })
+  ]
 };
 ```
 
@@ -98,7 +98,7 @@ export default {
 Then in your application code (written in React, Vue, Svelte, whatever), you can hide the splash screen when the application is ready.
 
 ```js
-import { hideSplashScreen } from "rspack-plugin-splash-screen/runtime";
+import { hideSplashScreen } from 'rspack-plugin-splash-screen/runtime';
 
 hideSplashScreen();
 ```
@@ -106,8 +106,8 @@ hideSplashScreen();
 For example in a React app, you can hide the splash screen in the `useEffect` hook.
 
 ```jsx
-import { useEffect } from "react";
-import { hideSplashScreen } from "rspack-plugin-splash-screen/runtime";
+import { useEffect } from 'react';
+import { hideSplashScreen } from 'rspack-plugin-splash-screen/runtime';
 
 export function App() {
   useEffect(() => {
@@ -134,8 +134,8 @@ For example, to display the splash screen for at least 2 seconds:
 
 ```js
 new RspackSplashScreenPlugin({
-  logoSrc: "logo.svg",
-  minDurationMs: 2000,
+  logoSrc: 'logo.svg',
+  minDurationMs: 2000
 });
 ```
 
@@ -146,52 +146,58 @@ What type of loading indicator should be displayed below the logo.
 Available options: `"line"` (default), `"dots"`, `"spinner"`, `"pulse"`, `"orbit"`, `"none"`.
 
 **Line** (default) - A horizontal progress bar with animated waves:
+
 ```js
 new RspackSplashScreenPlugin({
-  logoSrc: "logo.svg",
-  loaderType: "line",
+  logoSrc: 'logo.svg',
+  loaderType: 'line'
 });
 ```
 
 **Dots** - Animated bouncing dots:
+
 ```js
 new RspackSplashScreenPlugin({
-  logoSrc: "logo.svg",
-  loaderType: "dots",
+  logoSrc: 'logo.svg',
+  loaderType: 'dots'
 });
 ```
 
 ![Demo of rspack-plugin-splash-screen with dots style loading indicator](media/demo-2.gif)
 
 **Spinner** - Classic circular spinner:
+
 ```js
 new RspackSplashScreenPlugin({
-  logoSrc: "logo.svg",
-  loaderType: "spinner",
+  logoSrc: 'logo.svg',
+  loaderType: 'spinner'
 });
 ```
 
 **Pulse** - Pulsating circle animation:
+
 ```js
 new RspackSplashScreenPlugin({
-  logoSrc: "logo.svg",
-  loaderType: "pulse",
+  logoSrc: 'logo.svg',
+  loaderType: 'pulse'
 });
 ```
 
 **Orbit** - Four dots orbiting in a circular pattern:
+
 ```js
 new RspackSplashScreenPlugin({
-  logoSrc: "logo.svg",
-  loaderType: "orbit",
+  logoSrc: 'logo.svg',
+  loaderType: 'orbit'
 });
 ```
 
 **None** - Hide the loading indicator:
+
 ```js
 new RspackSplashScreenPlugin({
-  logoSrc: "logo.svg",
-  loaderType: "none",
+  logoSrc: 'logo.svg',
+  loaderType: 'none'
 });
 ```
 
@@ -205,9 +211,9 @@ Example:
 
 ```js
 new RspackSplashScreenPlugin({
-  logoSrc: "logo.svg",
-  loaderType: "line",
-  loaderBg: "#ff0000",
+  logoSrc: 'logo.svg',
+  loaderType: 'line',
+  loaderBg: '#ff0000'
 });
 ```
 
@@ -219,8 +225,8 @@ Example:
 
 ```js
 new RspackSplashScreenPlugin({
-  logoSrc: "logo.svg",
-  splashBg: "#000000",
+  logoSrc: 'logo.svg',
+  splashBg: '#000000'
 });
 ```
 
@@ -238,9 +244,11 @@ The following CSS variables are available:
 ```html
 <!-- Example: Set CSS variables based on user's color scheme preference -->
 <script>
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const prefersDark = window.matchMedia(
+    '(prefers-color-scheme: dark)'
+  ).matches;
   const root = document.documentElement;
-  
+
   if (prefersDark) {
     root.style.setProperty('--vpss-bg-splash', '#242424');
     root.style.setProperty('--vpss-bg-loader', '#ffcb29');
@@ -270,7 +278,7 @@ parameter to the URL before reloading the page.
 
 ```tsx
 const params = new URLSearchParams(location.search);
-params.set("vpss", "false");
+params.set('vpss', 'false');
 window.location.search = params.toString();
 ```
 
@@ -294,6 +302,7 @@ pnpm run test:build
 ```
 
 The test suite validates:
+
 - Splash screen display on initial load
 - Logo and loader elements presence
 - Hide functionality and timing
