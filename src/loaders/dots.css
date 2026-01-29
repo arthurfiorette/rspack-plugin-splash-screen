@@ -1,40 +1,40 @@
-#vpss .vpss-loader {
+#rpss .rpss-loader {
   display: inline-block;
   position: relative;
   width: 72px;
   height: 10px;
 }
 
-#vpss .vpss-loader .vpss-dot {
+#rpss .rpss-loader .rpss-dot {
   position: absolute;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--vpss-bg-loader, /*BG_LOADER*/);
+  background: var(--rpss-bg-loader, /*BG_LOADER*/);
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 
-#vpss .vpss-loader .vpss-dot:nth-child(1) {
+#rpss .rpss-loader .rpss-dot:nth-child(1) {
   left: 8px;
-  animation: vpss-dot1 0.6s infinite;
+  animation: rpss-dot1 0.6s infinite;
 }
 
-#vpss .vpss-loader .vpss-dot:nth-child(2) {
+#rpss .rpss-loader .rpss-dot:nth-child(2) {
   left: 8px;
-  animation: vpss-dot2 0.6s infinite;
+  animation: rpss-dot2 0.6s infinite;
 }
 
-#vpss .vpss-loader .vpss-dot:nth-child(3) {
+#rpss .rpss-loader .rpss-dot:nth-child(3) {
   left: 32px;
-  animation: vpss-dot2 0.6s infinite;
+  animation: rpss-dot2 0.6s infinite;
 }
 
-#vpss .vpss-loader .vpss-dot:nth-child(4) {
+#rpss .rpss-loader .rpss-dot:nth-child(4) {
   left: 56px;
-  animation: vpss-dot3 0.6s infinite;
+  animation: rpss-dot3 0.6s infinite;
 }
 
-@keyframes vpss-dot1 {
+@keyframes rpss-dot1 {
   0% {
     transform: scale(0);
   }
@@ -43,7 +43,7 @@
   }
 }
 
-@keyframes vpss-dot2 {
+@keyframes rpss-dot2 {
   0% {
     transform: translate(0, 0);
   }
@@ -52,7 +52,7 @@
   }
 }
 
-@keyframes vpss-dot3 {
+@keyframes rpss-dot3 {
   0% {
     transform: scale(1);
   }
