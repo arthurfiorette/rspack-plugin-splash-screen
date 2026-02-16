@@ -3,14 +3,10 @@ import { hideSplashScreen } from 'rspack-plugin-splash-screen/runtime';
 
 export default function App() {
   useEffect(() => {
-    setTimeout(() => {
       hideSplashScreen();
 
       // Try to hide splash again to test if it's idempotent
-      setTimeout(() => {
-        hideSplashScreen();
-      }, 500);
-    }, 500);
+      setTimeout(() => hideSplashScreen(), 500);
   }, []);
 
   return (
