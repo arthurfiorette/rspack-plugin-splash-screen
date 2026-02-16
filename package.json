@@ -18,6 +18,7 @@
   "funding": "https://github.com/arthurfiorette/rspack-plugin-splash-screen?sponsor=1",
   "license": "MIT",
   "author": "Arthur Fiorette <npm@arthur.place>",
+  "type": "module",
   "exports": {
     ".": {
       "require": "./dist/plugin/plugin.js",

@@ -104,7 +104,7 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
   }
 
   apply(compiler: Compiler) {
-    const pluginName = 'RspackSplashScreenPlugin';
+    const pluginName = this.constructor.name;
 
     // Hook into the compilation process to modify HTML assets
     compiler.hooks.make.tapAsync(pluginName, (compilation, callback) => {
@@ -209,8 +209,8 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
 
     return (
       html
-        // Add styles to end of head
-        .replace('</head>', `${finalStyles}</head>`)
+        // Add styles to start of head
+        .replace('<head>', `<head>${finalStyles}`)
         // Add splash screen to end of body
         .replace('</body>', `${finalSplash}</body>`)
     );
@@ -294,6 +294,9 @@ function splashTemplate({
     loaderHtml = loaderHtml.replace(/rpss-/g, `${id}-`);
   }
 
+  // Safe javascript id
+  const jsId = id.toUpperCase().replace(/-/g, '_');
+
   return /* html */ `
     <div id="${id}">
       <div class="${id}-logo">${logoHtml}</div>
@@ -301,13 +304,17 @@ function splashTemplate({
     </div>
     <script id="${id}-script">
       (function () {
+        if (window.__${jsId}__) {
+          return
+        }
+
         const id = "${id}";
         const url = new URL(window.location.href);
         const urlParams = new URLSearchParams(url.search)
         const param = urlParams.get(id);
 
         // Setup global options
-        window.__RPSS__ = {
+        window.__${jsId}__ = {
           id: id,
           hidden: param === "false",
           renderedAt: new Date().getTime(),
@@ -361,13 +368,15 @@ function splashTemplate({
             if (element) element.remove();
             if (styles) styles.remove();
             if (script) script.remove();
+
+            delete window.__${jsId}__;
           }
         };
 
-        if (window.__RPSS__.hidden) {
-          window.__RPSS__.remove();
+        if (window.__${jsId}__.hidden) {
+          window.__${jsId}__.remove();
         } else {
-          window.__RPSS__.show();
+          window.__${jsId}__.show();
         }
 
         // Remove query param from URL
