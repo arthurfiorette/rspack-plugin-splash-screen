@@ -58,6 +58,19 @@ export type PluginOptions = {
    * @defaultValue true
    */
   minify?: boolean;
+
+  /**
+   * Custom function to determine which files should be processed by the plugin.
+   * If not provided, all files ending with '.html' will be processed.
+   * Useful when the default .html check is not enough to detect only the entrypoint.
+   * @param filename - The name of the file being processed
+   * @returns true if the file should be processed, false otherwise
+   * @example
+   * ```typescript
+   * shouldProcessFile: (filename) => filename === 'index.html'
+   * ```
+   */
+  shouldProcessFile?: (filename: string) => boolean;
 };
 
 /**
@@ -82,7 +95,8 @@ export type PluginOptions = {
  * @public
  */
 export class RspackSplashScreenPlugin implements RspackPluginInstance {
-  private options: Required<PluginOptions>;
+  private options: Required<Omit<PluginOptions, 'shouldProcessFile'>> &
+    Pick<PluginOptions, 'shouldProcessFile'>;
   private publicDir: string;
 
   constructor(options: PluginOptions) {
@@ -97,7 +111,8 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
       loaderBg: options.loaderBg ?? '#0072f5',
       splashBg: options.splashBg ?? '#ffffff',
       id: options.id ?? 'rpss',
-      minify: options.minify ?? true
+      minify: options.minify ?? true,
+      shouldProcessFile: options.shouldProcessFile
     };
 
     this.publicDir = 'public'; // Default public directory
@@ -121,7 +136,12 @@ export class RspackSplashScreenPlugin implements RspackPluginInstance {
         },
         (assets, callback2) => {
           Object.keys(assets).forEach((assetName) => {
-            if (!assetName.endsWith('.html')) {
+            // Use custom shouldProcessFile function if provided, otherwise check for .html extension
+            const shouldProcess = this.options.shouldProcessFile
+              ? this.options.shouldProcessFile(assetName)
+              : assetName.endsWith('.html');
+
+            if (!shouldProcess) {
               return;
             }
 
