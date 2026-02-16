@@ -266,6 +266,47 @@ With a custom ID:
 - CSS variables become `--my-splash-*` instead of `--rpss-*`
 - Global API becomes `window.__MY_SPLASH__` instead of `window.__RPSS__`
 
+### `shouldProcessFile`
+
+Custom function to determine which files should be processed by the plugin (default: processes all `.html` files).
+
+This option is useful when the default `.html` extension check is not enough to detect only the entrypoint HTML file. For example, if your build outputs multiple HTML files but you only want to add the splash screen to specific ones.
+
+The function receives the filename (including path) as a parameter and should return `true` if the file should be processed, `false` otherwise.
+
+Example - Only process the main index.html file:
+
+```js
+new RspackSplashScreenPlugin({
+  logoSrc: 'logo.svg',
+  shouldProcessFile: (filename) => filename === 'index.html'
+});
+```
+
+Example - Process only HTML files in the root directory:
+
+```js
+new RspackSplashScreenPlugin({
+  logoSrc: 'logo.svg',
+  shouldProcessFile: (filename) => {
+    // Only process HTML files that don't contain a path separator
+    return filename.endsWith('.html') && !filename.includes('/');
+  }
+});
+```
+
+Example - Exclude specific HTML files:
+
+```js
+new RspackSplashScreenPlugin({
+  logoSrc: 'logo.svg',
+  shouldProcessFile: (filename) => {
+    // Process all HTML files except 404.html
+    return filename.endsWith('.html') && !filename.includes('404.html');
+  }
+});
+```
+
 ### Dynamic colors
 
 If your app supports theming (eg. light and dark mode), you can dynamically change the colors of the splash screen using CSS variables.
