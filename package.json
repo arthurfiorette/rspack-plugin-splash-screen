@@ -21,13 +21,13 @@
   "type": "module",
   "exports": {
     ".": {
-      "require": "./dist/plugin/plugin.js",
-      "import": "./dist/plugin/plugin.mjs",
+      "require": "./dist/plugin/plugin.cjs",
+      "import": "./dist/plugin/plugin.js",
       "types": "./dist/plugin/plugin.d.ts"
     },
     "./runtime": {
-      "require": "./dist/runtime/runtime.js",
-      "import": "./dist/runtime/runtime.mjs",
+      "require": "./dist/runtime/runtime.cjs",
+      "import": "./dist/runtime/runtime.js",
       "types": "./dist/runtime/runtime.d.ts"
     }
   },
