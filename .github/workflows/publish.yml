@@ -40,9 +40,6 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Generate
-        run: pnpm run generate
-
       - name: Update NPM
         run: npm i -g npm@latest
 
